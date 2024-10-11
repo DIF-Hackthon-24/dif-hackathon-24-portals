@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Modal from "../components/Modal";
-import axios from "axios";
 import { MapPinIcon, ArrowRightIcon } from "@heroicons/react/20/solid";
 import SignInForm from "../components/SignInForm";
 
@@ -10,6 +9,8 @@ export default function Login() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [isOnSignIn, setIsOnSignIn] = useState(false);
+  const [modalTitle, setModalTitle] = useState("Passwordless Login")
+  const [modalDescription, setModalDescription] = useState("Scan this QR code from your digital wallet to log in")
   // const router = useRouter();
 
   const openModal = async () => {
@@ -22,13 +23,17 @@ export default function Login() {
   };
 
   const fetchVerificationQRCode = async () => {
-    const response = await axios.get("/api/verification");
-    setQrCodeUrl(response.data.qrCodeUrl);
+    const response = await fetch("/api/verification");
+    const data = await response.json()
+    setQrCodeUrl(data.qrCode);
   };
 
   const fetchIssuanceQRCode = async () => {
-    const response = await axios.get("/api/issuance");
-    setQrCodeUrl(response.data.qrCodeUrl);
+    const response = await fetch("/api/issuance", {method: "POST"});
+    const data = await response.json()
+    setModalTitle("Acquire Login Credential")
+    setModalDescription("Scan this QR code from your digital wallet to get a new Login Credential")
+    setQrCodeUrl(data.qrCode);
   };
 
   // const handleLoginSuccess = () => {
@@ -52,7 +57,7 @@ export default function Login() {
             <p className="mt-6 text-lg leading-8 text-gray-600">
               Unlock Exclusive Perks and Tailored Stays –{" "}
               <button
-                className="highlight-mark font-extrabold"
+                className="highlight-mark font-extrabold underline"
                 onClick={() => setIsOnSignIn(true)}
               >
                 SIGN IN
@@ -134,12 +139,12 @@ export default function Login() {
       <Modal
         isOpen={modalIsOpen}
         onClose={closeModal}
-        title="Passwordless Login"
-        buttonActionTitle="Acquire VC"
+        title={modalTitle}
+        buttonActionTitle="Acquire Login Credential"
         buttonAction={fetchIssuanceQRCode}
       >
-        <h2>Scan this QR code to log in</h2>
-        {qrCodeUrl && <img src={qrCodeUrl} alt="QR Code" />}
+        <h2>{modalDescription}</h2>
+        {qrCodeUrl && <img className="inline h-64" src={qrCodeUrl} alt="QR Code" />}
       </Modal>
     </div>
   );

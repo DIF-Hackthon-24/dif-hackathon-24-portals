@@ -1,5 +1,5 @@
 import React from "react";
-import { DevicePhoneMobileIcon } from "@heroicons/react/20/solid";
+import PhoneSVG from "../atoms/PhoneSVG";
 
 interface SignInFromProps {
   buttonAction: () => void;
@@ -102,14 +102,11 @@ const SignInForm: React.FC<SignInFromProps> = ({ buttonAction }) => {
 
         <div className="mt-6 justify-center flex items-center gap-x-6">
           <button
-            className="rounded-3xl bg-cyan-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-cyan-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600 flex justify-center align-center flex-col"
+            className="rounded-3xl bg-cyan-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-cyan-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600 flex justify-center items-center flex-col"
             onClick={buttonAction}
           >
-            <div>
-              <DevicePhoneMobileIcon
-                aria-hidden="true"
-                className="h-10 w-10 inline"
-              />
+            <div className="mb-3 mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-cyan-700">
+              <PhoneSVG color="#FFFFFF"/>
             </div>
             Passwordless Login
           </button>

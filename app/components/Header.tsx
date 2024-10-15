@@ -1,6 +1,6 @@
 export default function Header() {
   return (
-    <div className="flex">
+    <a className="flex" href="/">
       <img
         alt="Your Company"
         src="https://cdn-icons-png.freepik.com/512/5070/5070423.png?ga=GA1.1.377055622.1728578237"
@@ -9,6 +9,6 @@ export default function Header() {
       <h1 className="text-4xl font-bold tracking-tight text-gray-900 ml-4">
         Horizon Hotels
       </h1>
-    </div>
+    </a>
   );
 }

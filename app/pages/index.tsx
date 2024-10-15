@@ -19,6 +19,8 @@ export default function Login() {
   };
 
   const closeModal = () => {
+    setModalTitle("Passwordless Login")
+    setModalDescription("Scan this QR code from your digital wallet to log in")
     setModalIsOpen(false);
   };
 

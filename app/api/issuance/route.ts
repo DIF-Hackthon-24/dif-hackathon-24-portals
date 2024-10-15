@@ -59,6 +59,8 @@ export async function POST() {
   if(response.ok) {
     const responseText = await response.text()
     const qrCode = await QRCode.toDataURL(responseText);
+    console.log(responseText)
+
     return Response.json({ qrCode })
   }
 }

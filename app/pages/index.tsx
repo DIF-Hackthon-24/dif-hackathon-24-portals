@@ -1,17 +1,61 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../components/Modal";
 import { MapPinIcon, ArrowRightIcon } from "@heroicons/react/20/solid";
 import SignInForm from "../components/SignInForm";
-
-// import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [isOnSignIn, setIsOnSignIn] = useState(false);
-  const [modalTitle, setModalTitle] = useState("Passwordless Login")
-  const [modalDescription, setModalDescription] = useState("Scan this QR code from your digital wallet to log in")
-  // const router = useRouter();
+  const [modalTitle, setModalTitle] = useState("Passwordless Login");
+  const [modalDescription, setModalDescription] = useState(
+    "Scan this QR code from your digital wallet to log in"
+  );
+  const [polling, setPolling] = useState<boolean>(true);
+  const [verificationStateId, setVerificationStateId] = useState("");
+  const [isMounted, setIsMounted] = useState(false); // To track if component is mounted
+
+  const pollingUrl = "https://verifier.portal.walt.id/openid4vc/session/";
+  const router = useRouter();
+
+  useEffect(() => {
+    setIsMounted(true); // Mark component as mounted when client-side renders
+  }, []);
+
+  useEffect(() => {
+    if (!isMounted) return;
+
+    const pollEndpoint = async () => {
+      try {
+        const response = await fetch(pollingUrl + verificationStateId);
+        const data = await response.json();
+        console.log(data)
+        console.log(verificationStateId)
+        // Check if "verificationResult" exists and is true
+        if (data.verificationResult === true) {
+          setPolling(false); // Stop polling when verification is successful
+          if (isMounted) {
+            router.push("/preferences"); // Only push if component is mounted
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching verification result:", error);
+      }
+    };
+
+    // Set up the polling logic
+    const interval = setInterval(() => {
+      if (polling && modalIsOpen) {
+        pollEndpoint();
+      } else {
+        clearInterval(interval); // Stop polling once the condition is met
+      }
+    }, 2000); // Poll every 2 seconds
+
+    // Cleanup the interval on component unmount
+    return () => clearInterval(interval);
+  }, [isMounted, modalIsOpen, polling, router, verificationStateId]);
 
   const openModal = async () => {
     setModalIsOpen(true);
@@ -19,22 +63,26 @@ export default function Login() {
   };
 
   const closeModal = () => {
-    setModalTitle("Passwordless Login")
-    setModalDescription("Scan this QR code from your digital wallet to log in")
+    setVerificationStateId("");
+    setModalTitle("Passwordless Login");
+    setModalDescription("Scan this QR code from your digital wallet to log in");
     setModalIsOpen(false);
   };
 
   const fetchVerificationQRCode = async () => {
     const response = await fetch("/api/verification");
-    const data = await response.json()
+    const data = await response.json();
     setQrCodeUrl(data.qrCode);
+    setVerificationStateId(data.stateId);
   };
 
   const fetchIssuanceQRCode = async () => {
-    const response = await fetch("/api/issuance", {method: "POST"});
-    const data = await response.json()
-    setModalTitle("Acquire Login Credential")
-    setModalDescription("Scan this QR code from your digital wallet to get a new Login Credential")
+    const response = await fetch("/api/issuance", { method: "POST" });
+    const data = await response.json();
+    setModalTitle("Acquire Login Credential");
+    setModalDescription(
+      "Scan this QR code from your digital wallet to get a new Login Credential"
+    );
     setQrCodeUrl(data.qrCode);
   };
 
@@ -146,7 +194,9 @@ export default function Login() {
         buttonAction={fetchIssuanceQRCode}
       >
         <h2>{modalDescription}</h2>
-        {qrCodeUrl && <img className="inline h-64" src={qrCodeUrl} alt="QR Code" />}
+        {qrCodeUrl && (
+          <img className="inline h-64" src={qrCodeUrl} alt="QR Code" />
+        )}
       </Modal>
     </div>
   );

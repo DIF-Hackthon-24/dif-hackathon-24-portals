@@ -1,16 +1,18 @@
 "use client";
 import { useState } from "react";
 import Header from "../components/Header";
+import { useRouter } from "next/navigation";
 
 export default function Preferences() {
   const [showQrCode, setShowQrCode] = useState(false);
+  const router = useRouter();
 
   return (
     <div
       className="p-12"
       style={{
         backgroundImage:
-          'linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6)), url("https://images.unsplash.com/photo-1661285829826-acd045ab0a77?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");',
+          "backgroundImage: linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6)), url('https://images.unsplash.com/photo-1661285829826-acd045ab0a77?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
         minHeight: "100vh",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
@@ -39,7 +41,9 @@ export default function Preferences() {
             </button>
             {showQrCode && (
               <div className="flex flex-col items-center mt-4">
-                <h3 className="text-gray-900 italic">Scan the QR code below from your App Wallet</h3>
+                <h3 className="text-gray-900 italic">
+                  Scan the QR code below from your App Wallet
+                </h3>
                 <div className="mt-4 bg-red-500 h-60 w-60">QRCode</div>
               </div>
             )}
@@ -197,6 +201,7 @@ export default function Preferences() {
           </div>
           <div className="mt-6 flex items-center justify-end gap-x-6">
             <button
+              onClick={() => router.push("/browse")}
               type="button"
               className="text-base font-semibold leading-6 text-gray-900 hover:bg-gray-100 px-3 py-2"
             >

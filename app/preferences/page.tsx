@@ -1,9 +1,80 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "../components/Header";
 
 export default function Preferences() {
   const [showQrCode, setShowQrCode] = useState(false);
+  const [qrCodeUrl, setQrCodeUrl] = useState("");
+  const [polling, setPolling] = useState<boolean>(true);
+
+  useEffect(() => {
+    const pollEndpoint = async () => {
+      try {
+        const response = await fetch(
+          `/api/permissions/grant?protocol=https://tel-platform.online/schemas/contactInformation&action=read`,
+          {
+            method: "GET"
+          }
+        );
+        const data = await response.json();
+        console.log("Data in polling", data);
+        // Check if permission has been granted
+        if (data.grantId) {
+          setPolling(false); // Stop polling when permission grant is successful
+        }
+      } catch (error) {
+        console.error("Error fetching permission grant result:", error);
+      }
+    };
+
+    // Set up the polling logic
+    const interval = setInterval(() => {
+      if (polling) {
+        console.log("Polling!!");
+        console.log("Permission request awaiting approval");
+        pollEndpoint();
+      } else {
+        clearInterval(interval); // Stop polling once the condition is met
+      }
+    }, 2000); // Poll every 2 seconds
+
+    // Cleanup the interval on component unmount
+    return () => clearInterval(interval);
+  }, [polling, qrCodeUrl]);
+
+  const fetchPermissionRequestQRCode = async (
+    protocol: string,
+    action: string
+  ) => {
+    console.log("Fetching permission request QR code");
+    // keyInfo hardcoded right now, representing hotel website's keyInfo to sign permission request
+    // target is the user's DWN, using hardcoded for now too
+    const body = JSON.stringify({
+      protocol: protocol,
+      action: action,
+      keyInfo: {
+        keyId:
+          "did:key:z6MkeXmNA9HutZcYei7YsU5jimrMcb7EU43BWTXqLXw59VRq#z6MkeXmNA9HutZcYei7YsU5jimrMcb7EU43BWTXqLXw59VRq",
+        privateJwk: {
+          crv: "Ed25519",
+          d: "64EBJEwSPeYkEZLSgVFWAOBGftgO-JSdgfRZn470DXs",
+          kty: "OKP",
+          x: "ASd5wVTGxYk6NWiWtSZIypBkT11mv8r8jpkdTDkyOdA",
+          kid: "U1e64aXaBM_1T7KkyzLejCbSLaYGE6Lpy0Rxyc3iuNA",
+          alg: "EdDSA"
+        }
+      },
+      target: "did:key:z6Mkkq7UNpMq9cdYoC5bqG2C4reWkPTgwDzKqBy1Y8utc4gW"
+    });
+    const response = await fetch("/api/permissions/request", {
+      method: "POST",
+      body: body
+    });
+    const data = await response.json();
+    setQrCodeUrl(data.qrCode);
+    setShowQrCode(true);
+    setPolling(true);
+  };
 
   return (
     <div
@@ -13,7 +84,7 @@ export default function Preferences() {
           'linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6)), url("https://images.unsplash.com/photo-1661285829826-acd045ab0a77?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");',
         minHeight: "100vh",
         backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
+        backgroundSize: "cover"
       }}
     >
       <Header />
@@ -30,17 +101,24 @@ export default function Preferences() {
           <div className="flex items-center flex-col mt-6">
             <button
               className="rounded-md bg-cyan-600 px-5 py-2 text-xl font-semibold text-white shadow-sm hover:bg-cyan-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
-              onClick={(e) => {
+              onClick={async (e) => {
                 e.preventDefault();
-                setShowQrCode(true);
+                await fetchPermissionRequestQRCode(
+                  "https://tel-platform.online/schemas/contactInformation",
+                  "read"
+                );
               }}
             >
               Already provided these in the App Wallet? Click Here
             </button>
             {showQrCode && (
               <div className="flex flex-col items-center mt-4">
-                <h3 className="text-gray-900 italic">Scan the QR code below from your App Wallet</h3>
-                <div className="mt-4 bg-red-500 h-60 w-60">QRCode</div>
+                <h3 className="text-gray-900 italic">
+                  Scan the QR code below from your App Wallet
+                </h3>
+                {qrCodeUrl && (
+                  <img className="inline h-64" src={qrCodeUrl} alt="QR Code" />
+                )}
               </div>
             )}
           </div>

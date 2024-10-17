@@ -7,7 +7,7 @@ export default function Preferences() {
   const [showQrCode, setShowQrCode] = useState(false);
   const router = useRouter();
   const [qrCodeUrl, setQrCodeUrl] = useState("");
-  const [polling, setPolling] = useState<boolean>(true);
+  const [polling, setPolling] = useState<boolean>(false);
 
   useEffect(() => {
     const pollEndpoint = async () => {

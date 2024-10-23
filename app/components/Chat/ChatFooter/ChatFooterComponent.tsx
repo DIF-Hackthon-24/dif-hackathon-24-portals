@@ -4,7 +4,10 @@ import { useRef, useState } from "react";
 import { sendMessage } from "../../../service/ChatService";
 import { Button } from "react-chat-elements";
 import "react-chat-elements/dist/main.css";
-import { sendCheckInMessage } from "../../../service/ChatService";
+import {
+  sendCheckInMessage,
+  sendPreferenceCollectionMessage
+} from "../../../service/ChatService";
 
 type ChatFooterComponentProps = {
   threadId: any;
@@ -21,6 +24,7 @@ export default function ChatFooterComponent(props: ChatFooterComponentProps) {
   const [sending, setSending] = useState<boolean>(false);
   const [sendingPrefs, setSendingPrefs] = useState<boolean>(false);
   console.log("recipient", props.recipient);
+  console.log("target", props.target);
 
   const clearRef = () => {
     if (inputReference.current) {
@@ -58,6 +62,14 @@ export default function ChatFooterComponent(props: ChatFooterComponentProps) {
 
   const startPrefCollection = async () => {
     setSendingPrefs(true);
+    await sendPreferenceCollectionMessage(
+      props.threadId,
+      props.sender,
+      props.target,
+      props.recipient
+    );
+    props.setRefetch();
+    setSendingPrefs(false);
   };
 
   return (
@@ -69,13 +81,13 @@ export default function ChatFooterComponent(props: ChatFooterComponentProps) {
         <div className="flex flex-row gap-3 items-center">
           <button
             className="rounded-md bg-cyan-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-cyan-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
-            onClick={() => startCheckIn()}
+            onClick={startCheckIn}
           >
             {sendingCheckIn ? "Sending..." : "Start check-in process"}
           </button>
           <button
             className="rounded-md bg-cyan-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-cyan-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
-            onClick={() => startPrefCollection()}
+            onClick={startPrefCollection}
           >
             {sendingPrefs ? "Sending..." : "Request additional preferences"}
           </button>

@@ -31,6 +31,7 @@ export default function PreferencesCard(props: PreferencesCardProps) {
       case "Hotel Search":
         return (
           <PrefTabContent
+            key="hotelSearch"
             protocol="hotelSearchPreferences"
             attributes={hotelSearchPreferencesTabAttributes}
           />
@@ -38,6 +39,7 @@ export default function PreferencesCard(props: PreferencesCardProps) {
       case "Hotel Stay":
         return (
           <PrefTabContent
+            key="hotelStay"
             protocol="hotelStayPreferences"
             attributes={hotelStayPreferencesTabAttributes}
           />
@@ -45,6 +47,7 @@ export default function PreferencesCard(props: PreferencesCardProps) {
       case "Dining Experience":
         return (
           <PrefTabContent
+            key="dining"
             protocol="diningPreferences"
             attributes={diningPreferencesTabAttributes}
           />

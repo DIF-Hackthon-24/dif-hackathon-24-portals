@@ -9,6 +9,7 @@ type ChatComponentProps = {
 
 export default function ChatComponent(props: ChatComponentProps) {
   console.log("messages", props.messages);
+  console.log("keyinfo", props.keyInfo);
 
   // let chatSource: any[] = [];
   // props.messages.forEach((msg: any) => {
@@ -40,15 +41,15 @@ export default function ChatComponent(props: ChatComponentProps) {
       <div className="flex-auto overflow-y-scroll mb-6">
         <MessageList
           referance={null}
-          lockable={true}
+          lockable={false}
           toBottomHeight={"100%"}
           dataSource={props.messages.map((message) =>
             message.encodedData.action
               ? {
                   position:
                     message.author == props.keyInfo.keyId.split("#")[0]
-                      ? "right"
-                      : "left",
+                      ? "left"
+                      : "right",
                   type: "text",
                   title: message.author,
                   text: (
@@ -63,8 +64,8 @@ export default function ChatComponent(props: ChatComponentProps) {
               : {
                   position:
                     message.author == props.keyInfo.keyId.split("#")[0]
-                      ? "right"
-                      : "left",
+                      ? "left"
+                      : "right",
                   type: "text",
                   title: message.author,
                   text: message.encodedData.title

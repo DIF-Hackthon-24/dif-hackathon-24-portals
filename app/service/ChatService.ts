@@ -115,10 +115,37 @@ export const sendCheckInMessage = async (
   target: any,
   recipient: any
 ) => {
-  console.log("in sendCheckIn message");
+  console.log("in sendCheckInMessage");
 
   const toSend =
     '{"title":"It\'s time to check-in! Click the button below to begin the check-in process.","action":"Start check-in"}';
+
+  let response = await axios.post(DWN_CLIENT_API + "/records/create", {
+    protocol: PROTOCOL,
+    protocolPath: "thread/message",
+    dataFormat: "application/json",
+    data: toSend,
+    recipient: recipient,
+    parentContextId: threadId,
+    keyInfo: keyInfo,
+    target: target
+  });
+
+  console.log(response.data);
+
+  return await response.data;
+};
+
+export const sendPreferenceCollectionMessage = async (
+  threadId: any,
+  keyInfo: any,
+  target: any,
+  recipient: any
+) => {
+  console.log("in sendPreferenceCollectionMessage");
+
+  const toSend =
+    '{"title":"To improve your stay with us, we would like to request read access to additional travel preferences. Please click the button below to review and share the travel preferences we are requesting.","action":"Share preferences"}';
 
   let response = await axios.post(DWN_CLIENT_API + "/records/create", {
     protocol: PROTOCOL,

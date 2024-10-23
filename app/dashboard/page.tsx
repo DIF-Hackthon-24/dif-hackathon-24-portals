@@ -49,10 +49,10 @@ export default function Dashboard() {
     getMessages();
 
     // Set up interval for long polling
-    // const intervalId = setInterval(getMessages, 5000); // Fetch every 5 seconds
+    const intervalId = setInterval(getMessages, 5000); // Fetch every 5 seconds
 
-    // // Clean up interval on component unmount
-    // return () => clearInterval(intervalId);
+    // Clean up interval on component unmount
+    return () => clearInterval(intervalId);
   }, [refetch]);
 
   // get recipient based on thread ID
@@ -86,8 +86,8 @@ export default function Dashboard() {
   return (
     <div className="flex flex-col p-8 h-screen">
       <div className="text-2xl font-bold mb-6">Guest Dashboard - Alex</div>
-      <div className="flex flex-row flex-grow gap-10">
-        <div className="bg-gray-200 p-4 flex-grow flex flex-col justify-end rounded-xl">
+      <div className="flex flex-row flex-grow gap-10 max-h-[95%]">
+        <div className="bg-gray-200 p-4 flex-grow flex flex-col justify-end rounded-xl max-h-[95%]">
           <ChatHeaderComponent threadTitle={threadTitle} target={target} />
           {messages.length === 0 ? (
             <div className="flex flex-auto align-bottom items-end mb-6 text-[#4f81a1] justify-center">
@@ -100,7 +100,7 @@ export default function Dashboard() {
             threadId={threadId}
             sender={hotelKeyInfo}
             recipient={recipient}
-            target={hotelKeyInfo.keyId.split("#")[0]}
+            target={target}
             setRefetch={setRefetch}
           />
         </div>

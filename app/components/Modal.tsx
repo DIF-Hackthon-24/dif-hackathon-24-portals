@@ -9,6 +9,8 @@ interface ModalProps {
   buttonActionTitle?: string;
   buttonAction?: () => void;
   footer?: string;
+  secondaryButton?: string;
+  secondayButtonAction?: ()=> void;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -18,7 +20,9 @@ const Modal: React.FC<ModalProps> = ({
   children,
   buttonActionTitle,
   buttonAction,
-  footer
+  footer,
+  secondaryButton,
+  secondayButtonAction
 }) => {
   if (!isOpen) return null;
 
@@ -57,24 +61,24 @@ const Modal: React.FC<ModalProps> = ({
                   <button
                     type="button"
                     onClick={() => buttonAction()}
-                    className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:col-start-2"
+                    className="inline-flex w-full justify-center rounded-md bg-cyan-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-cyan-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600 sm:col-start-2"
                   >
                     {buttonActionTitle}
                   </button>
 
                   <button
                     type="button"
-                    onClick={onClose}
+                    onClick={secondayButtonAction ?? onClose}
                     className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:col-start-1 sm:mt-0"
                   >
-                    Cancel
+                    {secondaryButton ?? "Cancel"}
                   </button>
                 </>
               )}
             </div>
             {footer && (
               <button
-                className="text-center w-full underline italic"
+                className="text-center w-full underline italic text-gray-500 mt-2"
                 onClick={onClose}
               >
                 {footer}

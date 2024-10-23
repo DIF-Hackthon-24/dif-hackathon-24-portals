@@ -7,7 +7,7 @@ export default function Header() {
         className="h-8"
       />
       <h1 className="text-4xl font-bold tracking-tight text-gray-900 ml-4">
-        Horizon Hotels
+        Starlight Hotels
       </h1>
     </a>
   );

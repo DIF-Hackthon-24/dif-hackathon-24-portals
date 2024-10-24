@@ -218,7 +218,7 @@ export default function Browse() {
     const pollEndpoint = async () => {
       try {
         const response = await fetch(
-          `/api/permissions/grant?protocol=https://dif-hackathon-2024/schemas/travelerProfile&action=read`,
+          `/api/permissions/grant?protocol=https://dif-hackathon-2024/schemas/hotelSearchPreferences&action=read`,
           {
             method: "GET"
           }
@@ -280,7 +280,7 @@ export default function Browse() {
 
     if (permissionGrantId !== "") {
       console.log("Have permissionGrantId, can do records-read now");
-      fetchRecords("https://dif-hackathon-2024/schemas/travelerProfile");
+      fetchRecords("https://dif-hackathon-2024/schemas/hotelSearchPreferences");
     }
   }, [permissionGrantId]);
 
@@ -567,7 +567,7 @@ export default function Browse() {
                       onClick={async (e) => {
                         e.preventDefault();
                         await fetchPermissionRequestQRCode(
-                          "https://dif-hackathon-2024/schemas/travelerProfile",
+                          "https://dif-hackathon-2024/schemas/hotelSearchPreferences",
                           "read"
                         );
                       }}
@@ -648,7 +648,7 @@ export default function Browse() {
                     <hr className="mt-2"></hr>
                     <Field className="flex items-center">
                       <Switch
-                        checked={records["smoking"] === "true"}
+                        checked={records["smoking"] === "Yes"}
                         // onChange={setEnabled}
                         className="group relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-gray-200 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-cyan-600 focus:ring-offset-2 data-[checked]:bg-cyan-600"
                       >
@@ -665,7 +665,7 @@ export default function Browse() {
                     </Field>
                     <Field className="flex items-center">
                       <Switch
-                        checked={records["smoking"] === "true"}
+                        checked={records["wheelchairAccessible"] === "Yes"}
                         // onChange={setEnabled}
                         className="group relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-gray-200 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-cyan-600 focus:ring-offset-2 data-[checked]:bg-cyan-600"
                       >
@@ -682,7 +682,7 @@ export default function Browse() {
                     </Field>
                     <Field className="flex items-center">
                       <Switch
-                        checked={records["smoking"] === "true"}
+                        checked={records["breakfastIncluded"] === "Yes"}
                         // onChange={setEnabled}
                         className="group relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-gray-200 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-cyan-600 focus:ring-offset-2 data-[checked]:bg-cyan-600"
                       >

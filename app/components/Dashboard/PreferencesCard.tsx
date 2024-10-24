@@ -15,7 +15,7 @@ export default function PreferencesCard(props: PreferencesCardProps) {
     { name: "Dining Experience" }
   ];
 
-  const [currentTab, setCurrentTab] = useState<string>(tabs[1].name);
+  const [currentTab, setCurrentTab] = useState<string>(tabs[0].name);
 
   function classNames(...classes) {
     return classes.filter(Boolean).join(" ");

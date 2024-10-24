@@ -22,7 +22,7 @@ export default function Dashboard() {
   const target = "did:key:z6Mkkq7UNpMq9cdYoC5bqG2C4reWkPTgwDzKqBy1Y8utc4gW";
 
   const threadId =
-    "bafyreieeynaih3xfxugvnvfvogimafcpab3gmnuazypwr6bgpj7zhtfp4q";
+    "bafyreidyo3drjl4pofrijchi6unrl7lakrjdepc2sg2g7bnzjzerkgd2uq";
 
   const hotelKeyInfo = {
     keyId:

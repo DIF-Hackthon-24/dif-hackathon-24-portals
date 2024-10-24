@@ -6,84 +6,74 @@ import { useRouter } from "next/navigation";
 
 export default function Login() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [isOnSignIn, setIsOnSignIn] = useState(false);
-  const [modalTitle, setModalTitle] = useState("Passwordless Login");
-  const [modalDescription, setModalDescription] = useState(
-    "Scan this QR code from your digital wallet to log in"
-  );
   const [polling, setPolling] = useState<boolean>(true);
   const [verificationStateId, setVerificationStateId] = useState("");
   const [isMounted, setIsMounted] = useState(false); // To track if component is mounted
 
+  const modalTitle = "Passwordless Login";
+  const modalDescription = "Ready to scan?";
+
   const pollingUrl = "https://verifier.portal.walt.id/openid4vc/session/";
   const router = useRouter();
 
-  useEffect(() => {
-    setIsMounted(true); // Mark component as mounted when client-side renders
-  }, []);
+  // useEffect(() => {
+  //   setIsMounted(true); // Mark component as mounted when client-side renders
+  // }, []);
 
-  useEffect(() => {
-    if (!isMounted) return;
+  // useEffect(() => {
+  //   if (!isMounted) return;
 
-    const pollEndpoint = async () => {
-      try {
-        const response = await fetch(pollingUrl + verificationStateId);
-        const data = await response.json();
-        console.log(data)
-        console.log(verificationStateId)
-        // Check if "verificationResult" exists and is true
-        if (data.verificationResult === true) {
-          setPolling(false); // Stop polling when verification is successful
-          if (isMounted) {
-            router.push("/preferences"); // Only push if component is mounted
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching verification result:", error);
-      }
-    };
+  //   const pollEndpoint = async () => {
+  //     try {
+  //       const response = await fetch(pollingUrl + verificationStateId);
+  //       const data = await response.json();
+  //       console.log(data);
+  //       console.log(verificationStateId);
+  //       // Check if "verificationResult" exists and is true
+  //       if (data.verificationResult === true) {
+  //         setPolling(false); // Stop polling when verification is successful
+  //         if (isMounted) {
+  //           router.push("/preferences"); // Only push if component is mounted
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching verification result:", error);
+  //     }
+  //   };
 
-    // Set up the polling logic
-    const interval = setInterval(() => {
-      if (polling && modalIsOpen) {
-        pollEndpoint();
-      } else {
-        clearInterval(interval); // Stop polling once the condition is met
-      }
-    }, 2000); // Poll every 2 seconds
+  //   // Set up the polling logic
+  //   const interval = setInterval(() => {
+  //     if (polling && modalIsOpen) {
+  //       pollEndpoint();
+  //     } else {
+  //       clearInterval(interval); // Stop polling once the condition is met
+  //     }
+  //   }, 2000); // Poll every 2 seconds
 
-    // Cleanup the interval on component unmount
-    return () => clearInterval(interval);
-  }, [isMounted, modalIsOpen, polling, router, verificationStateId]);
+  //   // Cleanup the interval on component unmount
+  //   return () => clearInterval(interval);
+  // }, [isMounted, modalIsOpen, polling, router, verificationStateId]);
 
   const openModal = async () => {
     setModalIsOpen(true);
-    await fetchVerificationQRCode();
   };
 
   const closeModal = () => {
     setVerificationStateId("");
-    setModalTitle("Passwordless Login");
-    setModalDescription("Scan this QR code from your digital wallet to log in");
     setModalIsOpen(false);
   };
 
   const fetchVerificationQRCode = async () => {
     const response = await fetch("/api/verification");
     const data = await response.json();
-    setQrCodeUrl(data.qrCode);
-    setVerificationStateId(data.stateId);
+    window.location.href = data.urlRedirect;
   };
 
   const fetchIssuanceQRCode = async () => {
     const response = await fetch("/api/issuance", { method: "POST" });
     const data = await response.json();
-    setModalTitle("Acquire Login Credential");
-    setModalDescription(
-      "Scan this QR code from your digital wallet to get a new Login Credential"
-    );
-    setQrCodeUrl(data.qrCode);
+    window.location.href = data.urlRedirect;
   };
 
   // const handleLoginSuccess = () => {
@@ -102,7 +92,7 @@ export default function Login() {
               className="h-11"
             />
             <h1 className="mt-24 text-4xl font-bold tracking-tight text-gray-900 sm:mt-10 sm:text-6xl">
-              Horizon Hotels
+              Starlight Hotels
             </h1>
             <p className="mt-6 text-lg leading-8 text-gray-600">
               Unlock Exclusive Perks and Tailored Stays –{" "}
@@ -192,11 +182,14 @@ export default function Login() {
         title={modalTitle}
         buttonActionTitle="Acquire Login Credential"
         buttonAction={fetchIssuanceQRCode}
+        footer="I'll use my password to login instead"
+        secondaryButton="Use my Login Credential"
+        secondayButtonAction={fetchVerificationQRCode}
       >
-        <h2>{modalDescription}</h2>
-        {qrCodeUrl && (
+        <h2 >{modalDescription}</h2>
+        {/* {qrCodeUrl && (
           <img className="inline h-64" src={qrCodeUrl} alt="QR Code" />
-        )}
+        )} */}
       </Modal>
     </div>
   );

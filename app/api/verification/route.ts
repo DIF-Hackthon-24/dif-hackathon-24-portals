@@ -1,38 +1,19 @@
-import { generateRandomString } from "@/app/utils";
-import QRCode from "qrcode";
+import { randomUUID } from "crypto";
 
 export async function GET() {
-  const url = "https://verifier.portal.walt.id/openid4vc/verify";
-  const stateId = generateRandomString(10);
+  const credentialType = "StarlightHotelsLogin";
 
-  const myHeaders = new Headers();
-  myHeaders.append("accept", "*/*");
-  myHeaders.append("authorizeBaseUrl", "openid4vp://authorize");
-  myHeaders.append("responseMode", "direct_post");
-  myHeaders.append("stateId", stateId);
-  myHeaders.append("Content-Type", "application/json");
+  const urlRedirect =
+    "https://locprod.ccg.condatis.com/v2/oidc/authorize?client_id=755a002b-17dd-49e7-94e3-8a25dfb498be&response_type=code&redirect_uri=" +
+    "http://localhost:3000/browse" +
+    "&response_mode=query&scope=openid+" +
+    credentialType +
+    "&code_challenge_method=S256&code_challenge=_r67lcj4MoDNBAkhxS7ke_YKhKCBAiM0SgzNCagbCxo&nonce=" +
+    randomUUID() +
+    "&state=" +
+    randomUUID();
 
-  const raw = JSON.stringify({
-    request_credentials: [
-      {
-        format: "jwt_vc_json",
-        type: "UniversityDegreeCredential",
-      },
-    ],
-  });
+  console.log("line20: " + urlRedirect);
 
-  const requestOptions = {
-    method: "POST",
-    headers: myHeaders,
-    body: raw,
-  };
-
-  const response = await fetch(url, requestOptions);
-
-  if (response.ok) {
-    const responseText = await response.text();
-    const qrCode = await QRCode.toDataURL(responseText);
-    console.log(stateId);
-    return Response.json({ qrCode, stateId });
-  }
+  return Response.json({ urlRedirect });
 }

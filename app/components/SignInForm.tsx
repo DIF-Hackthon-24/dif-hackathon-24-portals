@@ -19,7 +19,7 @@ const SignInForm: React.FC<SignInFromProps> = ({ buttonAction }) => {
           <div className="relative -space-y-px rounded-md shadow-sm">
             <div className="pointer-events-none absolute inset-0 z-10 rounded-md ring-1 ring-inset ring-gray-300" />
             <div>
-              <label htmlFor="email-address" className="sr-only">
+              <label htmlFor="email-address" className="sr-onlapp/pages/index.tsxy">
                 Email address
               </label>
               <input

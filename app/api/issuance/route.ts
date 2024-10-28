@@ -18,7 +18,5 @@ export async function POST() {
     randomUUID() +
     "&response_type=code&response_mode=query&code_challenge_method=S256&code_challenge=_r67lcj4MoDNBAkhxS7ke_YKhKCBAiM0SgzNCagbCxo";
 
-  console.log("line20: " + urlRedirect);
-
   return Response.json({ urlRedirect });
 }

@@ -170,10 +170,10 @@ export default function Browse() {
   const [permissionGrantId, setPermissionGrantId] = useState<string>("");
   const [polling, setPolling] = useState<boolean>(false);
   const [records, setRecords] = useState<{ [key: string]: unknown }>({});
-  const [filterOptions, setFilterOptions] = useState(true);
+  const [filterOptions, setFilterOptions] = useState(false);
 
   const searchParams = useSearchParams();
-  const discounted = searchParams.get("discounted");
+  const discounted = searchParams.get("code");
 
   useEffect(() => {
     const pollEndpoint = async () => {

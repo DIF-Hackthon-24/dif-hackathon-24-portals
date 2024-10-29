@@ -136,6 +136,34 @@ export const sendCheckInMessage = async (
   return await response.data;
 };
 
+// TODO: add the presentation request URL to data
+export const sendVerifyBookingMessage = async (
+  threadId: any,
+  keyInfo: any,
+  target: any,
+  recipient: any
+) => {
+  console.log("in sendVerifyBookingMessage");
+
+  const toSend =
+    '{"title":"Let\'s verify your booking. Please click the button below to present your booking credential.","action":"Verify booking"}';
+
+  let response = await axios.post(DWN_CLIENT_API + "/records/create", {
+    protocol: PROTOCOL,
+    protocolPath: "thread/message",
+    dataFormat: "application/json",
+    data: toSend,
+    recipient: recipient,
+    parentContextId: threadId,
+    keyInfo: keyInfo,
+    target: target
+  });
+
+  console.log(response.data);
+
+  return await response.data;
+};
+
 export const sendPreferenceCollectionMessage = async (
   threadId: any,
   keyInfo: any,

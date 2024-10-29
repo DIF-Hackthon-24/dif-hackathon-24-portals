@@ -22,7 +22,7 @@ export default function Dashboard() {
   const target = "did:key:z6Mkkq7UNpMq9cdYoC5bqG2C4reWkPTgwDzKqBy1Y8utc4gW";
 
   const threadId =
-    "bafyreidyo3drjl4pofrijchi6unrl7lakrjdepc2sg2g7bnzjzerkgd2uq";
+    "bafyreigpj6drhqhtgltzcsrldnuti35sophnxvq2jlul5wzs2eb7djkho4";
 
   const hotelKeyInfo = {
     keyId:
@@ -64,7 +64,7 @@ export default function Dashboard() {
       console.log("author", author);
       setRecipient(author);
 
-      const threadTitle = threadsList[0].encodedData.title;
+      const threadTitle = threadsList[0].encodedData.Title;
       console.log("thread title: ", threadTitle);
       setThreadTitle(threadTitle);
     };
@@ -104,9 +104,9 @@ export default function Dashboard() {
             setRefetch={setRefetch}
           />
         </div>
-        <div className="flex-[1_1_10%]">
+        {/* <div className="flex-[1_1_10%]">
           <PreferencesCard />
-        </div>
+        </div> */}
       </div>
     </div>
   );

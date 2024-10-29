@@ -2,7 +2,11 @@
 import ChatHeaderComponent from "../components/Chat/ChatHeader/ChatHeaderComponent";
 import ChatComponent from "../components/Chat/ChatComponent";
 import ChatFooterComponent from "../components/Chat/ChatFooter/ChatFooterComponent";
-import { readMessages, readThreads } from "../service/ChatService";
+import {
+  readMessages,
+  readThreads,
+  sendRoomKeyMessage
+} from "../service/ChatService";
 import { useState, useEffect } from "react";
 import { serviceProviderKeyInfo } from "../constants";
 import { extractAuthor } from "../service/ChatService";
@@ -18,6 +22,7 @@ export default function Dashboard() {
   const [recipient, setRecipient] = useState<string>("");
   const [threadTitle, setThreadTitle] = useState<string>("");
   const [refetch, setRefetch] = useState<boolean>(false);
+  const [sendKeyMessage, setSendKeyMessage] = useState<boolean>(false);
 
   const target = "did:key:z6Mkkq7UNpMq9cdYoC5bqG2C4reWkPTgwDzKqBy1Y8utc4gW";
 
@@ -36,6 +41,35 @@ export default function Dashboard() {
       alg: "EdDSA"
     }
   };
+
+  // Function to make the API call
+  async function sendIssuanceMessage() {
+    const response = await fetch("/api/roomKey", {
+      method: "POST"
+    });
+    const data = await response.json();
+    console.log("Fetched URL data from inside verifyBooking", data);
+    const url = data.link;
+
+    await sendRoomKeyMessage(threadId, hotelKeyInfo, target, recipient, url);
+  }
+
+  // Function to start the timer
+  function startTimer() {
+    console.log("Timer started. Waiting 20 seconds...");
+    setTimeout(() => {
+      console.log("20 seconds passed. Making API call...");
+      sendIssuanceMessage();
+    }, 20000); // 20000 milliseconds = 20 seconds
+  }
+
+  useEffect(() => {
+    if (sendKeyMessage) {
+      startTimer();
+    }
+  }, [sendKeyMessage]);
+
+  // Event listener to trigger the timer (e.g., button click)
 
   useEffect(() => {
     const getMessages = async () => {
@@ -102,6 +136,7 @@ export default function Dashboard() {
             recipient={recipient}
             target={target}
             setRefetch={setRefetch}
+            setSendKeyMessage={setSendKeyMessage}
           />
         </div>
         {/* <div className="flex-[1_1_10%]">

@@ -20,6 +20,7 @@ type ChatFooterComponentProps = {
   recipient: any;
   sender: any;
   setRefetch: any;
+  setSendKeyMessage: any;
 };
 
 export default function ChatFooterComponent(props: ChatFooterComponentProps) {
@@ -89,19 +90,20 @@ export default function ChatFooterComponent(props: ChatFooterComponentProps) {
       });
       const data = await response.json();
       console.log("Fetched URL data from inside verifyBooking", data);
+
+      await sendVerifyBookingMessage(
+        props.threadId,
+        props.sender,
+        props.target,
+        props.recipient,
+        data.link
+      );
+      props.setRefetch();
+      setSendingVerifyBooking(false);
+      props.setSendKeyMessage(true);
     } catch (e) {
       console.log(e);
     }
-
-    // TODO: add the presentation request URL?
-    await sendVerifyBookingMessage(
-      props.threadId,
-      props.sender,
-      props.target,
-      props.recipient
-    );
-    props.setRefetch();
-    setSendingVerifyBooking(false);
   };
 
   return (

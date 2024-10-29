@@ -15,9 +15,9 @@ const filters = [
       { value: "facial", label: "Facial" },
       { value: "manicure", label: "Manicure" },
       { value: "pedicure", label: "Pedicure" },
-      { value: "general-pass", label: "General" },
-    ],
-  },
+      { value: "general-pass", label: "General" }
+    ]
+  }
 ];
 const massages = [
   {
@@ -27,7 +27,7 @@ const massages = [
     price: "$250",
     discountPrice: "$220",
     description: "Sunset Executive Suite",
-    duration: "90 mins",
+    duration: "90 mins"
   },
   {
     id: 2,
@@ -36,7 +36,7 @@ const massages = [
     price: "$295",
     discountPrice: "$270",
     description: "Baobab View Junior Suite",
-    duration: "60 mins",
+    duration: "60 mins"
   },
   {
     id: 3,
@@ -44,8 +44,8 @@ const massages = [
     href: "#",
     price: "$300",
     description: "Lumière Presidential Suite",
-    duration: "90 mins",
-  },
+    duration: "90 mins"
+  }
   // More products...
 ];
 
@@ -56,7 +56,7 @@ const facial = [
     href: "/browse/1",
     price: "$250",
     description: "Sunset Executive Suite",
-    duration: "60 mins",
+    duration: "60 mins"
   },
   {
     id: 11,
@@ -64,7 +64,7 @@ const facial = [
     href: "#",
     price: "$280",
     description: "Baobab View Junior Suite",
-    duration: "60 mins",
+    duration: "60 mins"
   },
   {
     id: 12,
@@ -72,8 +72,8 @@ const facial = [
     href: "#",
     price: "$300",
     description: "Lumière Presidential Suite",
-    duration: "60 mins",
-  },
+    duration: "60 mins"
+  }
   // More products...
 ];
 
@@ -85,7 +85,7 @@ const manicure = [
     price: "$60",
     discountPrice: "$55",
     description: "Sunset Executive Suite",
-    duration: "60 mins",
+    duration: "60 mins"
   },
   {
     id: 21,
@@ -93,7 +93,7 @@ const manicure = [
     href: "#",
     price: "$85",
     description: "Baobab View Junior Suite",
-    duration: "60 mins",
+    duration: "60 mins"
   },
   {
     id: 22,
@@ -102,8 +102,8 @@ const manicure = [
     price: "$90",
     discountPrice: "$75",
     description: "Lumière Presidential Suite",
-    duration: "60 mins",
-  },
+    duration: "60 mins"
+  }
   // More products...
 ];
 
@@ -114,7 +114,7 @@ const pedicure = [
     href: "/browse/1",
     price: "$70",
     description: "Sunset Executive Suite",
-    duration: "60 mins",
+    duration: "60 mins"
   },
   {
     id: 21,
@@ -122,7 +122,7 @@ const pedicure = [
     href: "#",
     price: "$95",
     description: "Baobab View Junior Suite",
-    duration: "60 mins",
+    duration: "60 mins"
   },
   {
     id: 22,
@@ -130,8 +130,8 @@ const pedicure = [
     href: "#",
     price: "$95",
     description: "Lumière Presidential Suite",
-    duration: "60 mins",
-  },
+    duration: "60 mins"
+  }
   // More products...
 ];
 
@@ -142,7 +142,7 @@ const general = [
     href: "/browse/1",
     price: "$300",
     description: "Sunset Executive Suite",
-    duration: "1 day",
+    duration: "1 day"
   },
   {
     id: 21,
@@ -150,7 +150,7 @@ const general = [
     href: "#",
     price: "$80",
     description: "Baobab View Junior Suite",
-    duration: "45 mins",
+    duration: "45 mins"
   },
   {
     id: 22,
@@ -158,8 +158,8 @@ const general = [
     href: "#",
     price: "$125",
     description: "Lumière Presidential Suite",
-    duration: "60 mins",
-  },
+    duration: "60 mins"
+  }
   // More products...
 ];
 
@@ -169,7 +169,7 @@ export default function Browse() {
   const [qrCodeUrl, setQrCodeUrl] = useState<string>("");
   const [permissionGrantId, setPermissionGrantId] = useState<string>("");
   const [polling, setPolling] = useState<boolean>(false);
-  const [records, setRecords] = useState<{ [key: string]: unknown }>({});
+  const [records, setRecords] = useState<{ [key: string]: any }>({});
   const [filterOptions, setFilterOptions] = useState(false);
 
   const searchParams = useSearchParams();
@@ -178,10 +178,36 @@ export default function Browse() {
   useEffect(() => {
     const pollEndpoint = async () => {
       try {
+        const myHeaders = new Headers();
+        myHeaders.append("accept", "*/*");
+        myHeaders.append("Content-Type", "application/json");
+
+        // keyInfo hardcoded right now, representing hotel website's keyInfo to sign permission grant GET
+        // target is the user's DWN, using hardcoded for now too
+
+        const stringifiedKey = JSON.stringify({
+          keyId:
+            "did:key:z6Mkftos2iAt9hL2joUGvjDVVkeaWPYBj9CYehUxx4niRfKv#z6Mkftos2iAt9hL2joUGvjDVVkeaWPYBj9CYehUxx4niRfKv",
+          privateJwk: {
+            crv: "Ed25519",
+            d: "sSwQBXpKgkvJsinzgffzgIwSmwawPCsN4h9r0POVJ-U",
+            kty: "OKP",
+            x: "FWcvDHQemUB2TnoCkTea10q2O3dnhwQGoetKyp10UVE",
+            kid: "jUh1nu3jESKWUPkMEPfJpOwFelke-yeMSwHtnAR0HFE",
+            alg: "EdDSA"
+          }
+        });
+
+        myHeaders.append("X-KeyInfo", stringifiedKey);
+        myHeaders.append(
+          "X-Target",
+          "did:key:z6Mkkq7UNpMq9cdYoC5bqG2C4reWkPTgwDzKqBy1Y8utc4gW"
+        );
         const response = await fetch(
           `/api/permissions/grant?protocol=https://dif-hackathon-2024/schemas/travelerProfile&action=read`,
           {
             method: "GET",
+            headers: myHeaders
           }
         );
         const data = await response.json();
@@ -216,28 +242,36 @@ export default function Browse() {
     const fetchRecords = async (protocol: string) => {
       console.log("Fetching records");
 
-      const protocolPaths = [
-        "massage",
-        "facial",
-        "manicure",
-        "pedicure",
-        "general",
-        "wheelchairAccessible",
-      ];
+      const protocolPaths = ["spaTreatments", "wheelchairAccessible"];
 
       const body = JSON.stringify({
         protocol: protocol,
         protocolPaths: protocolPaths,
         permissionGrantId: permissionGrantId,
-        target: "did:key:z6Mkkq7UNpMq9cdYoC5bqG2C4reWkPTgwDzKqBy1Y8utc4gW",
+        keyInfo: {
+          keyId:
+            "did:key:z6Mkftos2iAt9hL2joUGvjDVVkeaWPYBj9CYehUxx4niRfKv#z6Mkftos2iAt9hL2joUGvjDVVkeaWPYBj9CYehUxx4niRfKv",
+          privateJwk: {
+            crv: "Ed25519",
+            d: "sSwQBXpKgkvJsinzgffzgIwSmwawPCsN4h9r0POVJ-U",
+            kty: "OKP",
+            x: "FWcvDHQemUB2TnoCkTea10q2O3dnhwQGoetKyp10UVE",
+            kid: "jUh1nu3jESKWUPkMEPfJpOwFelke-yeMSwHtnAR0HFE",
+            alg: "EdDSA"
+          }
+        },
+        target: "did:key:z6Mkkq7UNpMq9cdYoC5bqG2C4reWkPTgwDzKqBy1Y8utc4gW"
       });
 
       const response = await fetch("/api/records/read", {
         method: "POST",
-        body: body,
+        body: body
       });
       const data = await response.json();
       console.log("Got records", data);
+      const spaTreatmentsArray = data.spaTreatments.split(",");
+      console.log(spaTreatmentsArray);
+      data.spaTreatments = spaTreatmentsArray;
       setRecords(data);
       setFilterOptions(true);
     };
@@ -258,28 +292,28 @@ export default function Browse() {
     action: string
   ) => {
     console.log("Fetching permission request QR code");
-    // keyInfo hardcoded right now, representing hotel website's keyInfo to sign permission request
+    // keyInfo hardcoded right now, representing spa website's keyInfo to sign permission request
     // target is the user's DWN, using hardcoded for now too
     const body = JSON.stringify({
       protocol: protocol,
       action: action,
       keyInfo: {
         keyId:
-          "did:key:z6MkeXmNA9HutZcYei7YsU5jimrMcb7EU43BWTXqLXw59VRq#z6MkeXmNA9HutZcYei7YsU5jimrMcb7EU43BWTXqLXw59VRq",
+          "did:key:z6Mkftos2iAt9hL2joUGvjDVVkeaWPYBj9CYehUxx4niRfKv#z6Mkftos2iAt9hL2joUGvjDVVkeaWPYBj9CYehUxx4niRfKv",
         privateJwk: {
           crv: "Ed25519",
-          d: "64EBJEwSPeYkEZLSgVFWAOBGftgO-JSdgfRZn470DXs",
+          d: "sSwQBXpKgkvJsinzgffzgIwSmwawPCsN4h9r0POVJ-U",
           kty: "OKP",
-          x: "ASd5wVTGxYk6NWiWtSZIypBkT11mv8r8jpkdTDkyOdA",
-          kid: "U1e64aXaBM_1T7KkyzLejCbSLaYGE6Lpy0Rxyc3iuNA",
-          alg: "EdDSA",
-        },
+          x: "FWcvDHQemUB2TnoCkTea10q2O3dnhwQGoetKyp10UVE",
+          kid: "jUh1nu3jESKWUPkMEPfJpOwFelke-yeMSwHtnAR0HFE",
+          alg: "EdDSA"
+        }
       },
-      target: "did:key:z6Mkkq7UNpMq9cdYoC5bqG2C4reWkPTgwDzKqBy1Y8utc4gW",
+      target: "did:key:z6Mkkq7UNpMq9cdYoC5bqG2C4reWkPTgwDzKqBy1Y8utc4gW"
     });
     const response = await fetch("/api/permissions/request", {
       method: "POST",
-      body: body,
+      body: body
     });
     const data = await response.json();
     setQrCodeUrl(data.qrCode);
@@ -368,7 +402,7 @@ export default function Browse() {
                 <Modal
                   isOpen={modalIsOpen}
                   onClose={closeModal}
-                  title="Starlight Hotels is requesting read access to your traveler profile"
+                  title="Horizon Spa & Wellness is requesting read access to your traveler profile"
                   footer="No thanks, I'll input my preferences manually"
                 >
                   <h3 className="text-gray-900 italic">
@@ -419,7 +453,9 @@ export default function Browse() {
                                   id={`${section.id}-${optionIdx}`}
                                   name={`${section.id}[]`}
                                   type="checkbox"
-                                  checked={option.label === records[section.id]}
+                                  checked={records?.spaTreatments?.includes(
+                                    option.label
+                                  )}
                                   className="h-4 w-4 rounded border-gray-300 text-amber-600 focus:ring-amber-500"
                                 />
                                 <label
@@ -439,7 +475,7 @@ export default function Browse() {
 
                     <Field className="flex items-center">
                       <Switch
-                        checked={records["wheelchairAccessible"] === "true"}
+                        checked={records["wheelchairAccessible"] === "Yes"}
                         // onChange={setEnabled}
                         className="group relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-gray-200 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-amber-600 focus:ring-offset-2 data-[checked]:bg-amber-600"
                       >
@@ -493,7 +529,9 @@ export default function Browse() {
                                 <span className="line-through mr-1">
                                   {product.price}
                                 </span>
-                                <span className="font-bold">{product.discountPrice}</span>
+                                <span className="font-bold">
+                                  {product.discountPrice}
+                                </span>
                               </>
                             )
                           ) : (
@@ -556,7 +594,7 @@ export default function Browse() {
                   </a>
 
                   <div className="flex flex-row gap-2">
-                  {manicure.map((product) => (
+                    {manicure.map((product) => (
                       <div
                         key={product.id}
                         className="p-5 w-[18rem] bg-neutral-50 rounded-lg text-center"
@@ -574,7 +612,9 @@ export default function Browse() {
                                 <span className="line-through mr-1 text-[11pt]">
                                   {product.price}
                                 </span>
-                                <span className="font-bold">{product.discountPrice}</span>
+                                <span className="font-bold">
+                                  {product.discountPrice}
+                                </span>
                               </>
                             )
                           ) : (

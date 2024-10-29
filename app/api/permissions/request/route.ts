@@ -15,18 +15,7 @@ export async function POST(request: NextRequest) {
   const body = JSON.stringify({
     protocol: reqBody.protocol,
     action: reqBody.action,
-    keyInfo: {
-      keyId:
-        "did:key:z6MkeXmNA9HutZcYei7YsU5jimrMcb7EU43BWTXqLXw59VRq#z6MkeXmNA9HutZcYei7YsU5jimrMcb7EU43BWTXqLXw59VRq",
-      privateJwk: {
-        crv: "Ed25519",
-        d: "64EBJEwSPeYkEZLSgVFWAOBGftgO-JSdgfRZn470DXs",
-        kty: "OKP",
-        x: "ASd5wVTGxYk6NWiWtSZIypBkT11mv8r8jpkdTDkyOdA",
-        kid: "U1e64aXaBM_1T7KkyzLejCbSLaYGE6Lpy0Rxyc3iuNA",
-        alg: "EdDSA"
-      }
-    },
+    keyInfo: reqBody.keyInfo,
     target: "did:key:z6Mkkq7UNpMq9cdYoC5bqG2C4reWkPTgwDzKqBy1Y8utc4gW"
   });
 
@@ -41,9 +30,10 @@ export async function POST(request: NextRequest) {
   try {
     const response = await fetch(url, requestOptions);
     if (response.ok) {
-      const permissionRequestId = await response.text();
-      const qrCode = await QRCode.toDataURL(permissionRequestId);
-      return Response.json({ qrCode, permissionRequestId });
+      const permissionDetails = await response.text();
+      console.log("permissionDetails", permissionDetails);
+      const qrCode = await QRCode.toDataURL(permissionDetails);
+      return Response.json({ qrCode, permissionDetails });
     } else {
       console.log(response);
     }

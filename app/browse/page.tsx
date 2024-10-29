@@ -10,10 +10,9 @@ import {
   DisclosurePanel,
   Field,
   Label,
-  Switch} from "@headlessui/react";
-import {
-  XMarkIcon
-} from "@heroicons/react/24/outline";
+  Switch
+} from "@headlessui/react";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 import {
   ChevronDownIcon,
   PlusIcon,
@@ -23,7 +22,6 @@ import Header from "../components/Header";
 import Modal from "../components/Modal";
 import TopBar from "../components/TopBar";
 import Footer from "../components/Footer";
-
 
 const filters = [
   {
@@ -120,10 +118,37 @@ export default function Browse() {
   useEffect(() => {
     const pollEndpoint = async () => {
       try {
+        const myHeaders = new Headers();
+        myHeaders.append("accept", "*/*");
+        myHeaders.append("Content-Type", "application/json");
+
+        // keyInfo hardcoded right now, representing hotel website's keyInfo to sign permission grant GET
+        // target is the user's DWN, using hardcoded for now too
+
+        const stringifiedKey = JSON.stringify({
+          keyId:
+            "did:key:z6MkeXmNA9HutZcYei7YsU5jimrMcb7EU43BWTXqLXw59VRq#z6MkeXmNA9HutZcYei7YsU5jimrMcb7EU43BWTXqLXw59VRq",
+          privateJwk: {
+            crv: "Ed25519",
+            d: "64EBJEwSPeYkEZLSgVFWAOBGftgO-JSdgfRZn470DXs",
+            kty: "OKP",
+            x: "ASd5wVTGxYk6NWiWtSZIypBkT11mv8r8jpkdTDkyOdA",
+            kid: "U1e64aXaBM_1T7KkyzLejCbSLaYGE6Lpy0Rxyc3iuNA",
+            alg: "EdDSA"
+          }
+        });
+
+        myHeaders.append("X-KeyInfo", stringifiedKey);
+        myHeaders.append(
+          "X-Target",
+          "did:key:z6Mkkq7UNpMq9cdYoC5bqG2C4reWkPTgwDzKqBy1Y8utc4gW"
+        );
+
         const response = await fetch(
-          `/api/permissions/grant?protocol=https://dif-hackathon-2024/schemas/hotelSearchPreferences&action=read`,
+          `/api/permissions/grant?protocol=https://dif-hackathon-2024/schemas/travelerProfile&action=read`,
           {
-            method: "GET"
+            method: "GET",
+            headers: myHeaders
           }
         );
         const data = await response.json();
@@ -169,6 +194,18 @@ export default function Browse() {
         protocol: protocol,
         protocolPaths: protocolPaths,
         permissionGrantId: permissionGrantId,
+        keyInfo: {
+          keyId:
+            "did:key:z6MkeXmNA9HutZcYei7YsU5jimrMcb7EU43BWTXqLXw59VRq#z6MkeXmNA9HutZcYei7YsU5jimrMcb7EU43BWTXqLXw59VRq",
+          privateJwk: {
+            crv: "Ed25519",
+            d: "64EBJEwSPeYkEZLSgVFWAOBGftgO-JSdgfRZn470DXs",
+            kty: "OKP",
+            x: "ASd5wVTGxYk6NWiWtSZIypBkT11mv8r8jpkdTDkyOdA",
+            kid: "U1e64aXaBM_1T7KkyzLejCbSLaYGE6Lpy0Rxyc3iuNA",
+            alg: "EdDSA"
+          }
+        },
         target: "did:key:z6Mkkq7UNpMq9cdYoC5bqG2C4reWkPTgwDzKqBy1Y8utc4gW"
       });
 
@@ -183,7 +220,7 @@ export default function Browse() {
 
     if (permissionGrantId !== "") {
       console.log("Have permissionGrantId, can do records-read now");
-      fetchRecords("https://dif-hackathon-2024/schemas/hotelSearchPreferences");
+      fetchRecords("https://dif-hackathon-2024/schemas/travelerProfile");
     }
   }, [permissionGrantId]);
 
@@ -332,7 +369,9 @@ export default function Browse() {
             {/* Filters */}
             <div className="pt-12 lg:grid lg:grid-cols-3 lg:gap-x-8 xl:grid-cols-4">
               <aside>
-                <h2 className="pb-2 font-bold text-xl text-gray-700">Filters</h2>
+                <h2 className="pb-2 font-bold text-xl text-gray-700">
+                  Filters
+                </h2>
 
                 {permissionGrantId ? (
                   <>
@@ -359,7 +398,7 @@ export default function Browse() {
                       onClick={async (e) => {
                         e.preventDefault();
                         await fetchPermissionRequestQRCode(
-                          "https://dif-hackathon-2024/schemas/hotelSearchPreferences",
+                          "https://dif-hackathon-2024/schemas/travelerProfile",
                           "read"
                         );
                       }}

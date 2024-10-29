@@ -2,9 +2,10 @@ import { randomUUID } from "crypto";
 import * as ws from "ws";
 
 export async function POST() {
-  const credentialType = "StarlightHotelsBooking";
+  let openIDLink = "";
+  const credentialType = "StarlightHotelsRoomKey";
   const idTokenHint =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJCb29raW5nSUQiOiIxOTQ4MzVBIiwiSG90ZWxOYW1lIjoiVmVyZGFudCBSZXRyZWF0IiwiRnJvbSI6IjE5LzExLzIwMjQiLCJUbyI6IjI0LzExLzIwMjQiLCJSb29tVHlwZSI6IlN1bnNldCBFeGVjdXRpdmUgU3VpdGUiLCJUb3RhbEFtb3VudCI6IjEzMDAiLCJTZXJpYWxOdW1iZXIiOiIiLCJuYmYiOjE3Mjk3MDI3MzksImV4cCI6MTc0NTQyNzUzOSwiaWF0IjoxNzI5NzAyNzM5LCJpc3MiOiI3NTVhMDAyYi0xN2RkLTQ5ZTctOTRlMy04YTI1ZGZiNDk4YmUiLCJhdWQiOiJodHRwczovL2xvY3Byb2QuY2NnLmNvbmRhdGlzLmNvbSJ9.PZU5NfYtqqfyCYsLI2qYuE9xPnGOBQMlUyf2DIRHAx8";
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJIb3RlbE5hbWUiOiJTdGFydGxpZ2h0IEhvdGVscyIsIlJvb21JRCI6IlNUNzAxIiwiU2VyaWFsTnVtYmVyIjoiIiwibmJmIjoxNzI5MjY3MzY4LCJleHAiOjE3NDQ5OTIxNjgsImlhdCI6MTcyOTI2NzM2OCwiaXNzIjoiNzU1YTAwMmItMTdkZC00OWU3LTk0ZTMtOGEyNWRmYjQ5OGJlIiwiYXVkIjoiaHR0cHM6Ly9sb2Nwcm9kLmNjZy5jb25kYXRpcy5jb20ifQ.x2Yb2EQnGfWPxznsS8CSbqKEqfqBxiBNwzGJO2PXN_I";
 
   const urlRedirect =
     "https://locprod.ccg.condatis.com/v2/oidc/authorize?client_id=755a002b-17dd-49e7-94e3-8a25dfb498be&redirect_uri=" +
@@ -18,23 +19,6 @@ export async function POST() {
     "&state=" +
     randomUUID() +
     "&response_type=code&response_mode=query&code_challenge_method=S256&code_challenge=_r67lcj4MoDNBAkhxS7ke_YKhKCBAiM0SgzNCagbCxo";
-
-  return Response.json({ urlRedirect });
-}
-
-export async function GET() {
-  let openIDLink = "";
-  const credentialType = "StarlightHotelsBooking";
-
-  const urlRedirect =
-    "https://locprod.ccg.condatis.com/v2/oidc/authorize?client_id=755a002b-17dd-49e7-94e3-8a25dfb498be&response_type=code&redirect_uri=" +
-    "http://localhost:3000/browse" +
-    "&response_mode=query&scope=openid+" +
-    credentialType +
-    "&code_challenge_method=S256&code_challenge=_r67lcj4MoDNBAkhxS7ke_YKhKCBAiM0SgzNCagbCxo&nonce=" +
-    randomUUID() +
-    "&state=" +
-    randomUUID();
 
   const data = await fetch(urlRedirect, {
     credentials: "include",
@@ -51,17 +35,17 @@ export async function GET() {
       "Sec-Fetch-User": "?1",
       Priority: "u=0, i",
       Pragma: "no-cache",
-      "Cache-Control": "no-cache"
+      "Cache-Control": "no-cache",
     },
     method: "GET",
-    mode: "cors"
+    mode: "cors",
   });
 
   const headerLoaction = data.url;
   const resp = await data.text();
 
   const negotiation = await fetch(
-    "https://locprod.ccg.condatis.com/verify/negotiate?negotiateVersion=1",
+    "https://locprod.ccg.condatis.com/Issue/negotiate?negotiateVersion=1",
     {
       credentials: "include",
       headers: {
@@ -78,11 +62,11 @@ export async function GET() {
         "Sec-Fetch-Site": "same-origin",
         Priority: "u=4",
         Pragma: "no-cache",
-        "Cache-Control": "no-cache"
+        "Cache-Control": "no-cache",
       },
       referrer: headerLoaction,
       method: "POST",
-      mode: "cors"
+      mode: "cors",
     }
   );
 
@@ -91,7 +75,7 @@ export async function GET() {
 
   const openIDLinkPromise = new Promise((resolve, reject) => {
     var client = new ws.WebSocket(
-      "wss://locprod.ccg.condatis.com/verify?id=" + token,
+      "wss://locprod.ccg.condatis.com/Issue?id=" + token,
       [],
       {
         protocolVersion: 13,
@@ -101,7 +85,7 @@ export async function GET() {
           // "user-agent":
           //   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:131.0) Gecko/20100101 Firefox/131.0",
           host: "locprod.ccg.condatis.com",
-          origin: "https://locprod.ccg.condatis.com"
+          origin: "https://locprod.ccg.condatis.com",
           // prgama: "no-cache",
           // accept: "*/*",
           // "accept-language": "en-GB,en;q=0.5",
@@ -110,7 +94,7 @@ export async function GET() {
           // connection: "keep-alive, Upgrade",
           // "cache-control":"no-cache",
           // upgrade: "websocket"
-        }
+        },
       }
     );
 
@@ -126,16 +110,10 @@ export async function GET() {
 
     const msgToSend =
       JSON.stringify({
-        arguments: [
-          {
-            client_id: "755a002b-17dd-49e7-94e3-8a25dfb498be",
-            credential_names: ["StarlightHotelsBooking"],
-            data_identifier: dataIdentifier
-          }
-        ],
+        arguments: [dataIdentifier],
         invocationId: "0",
-        target: "VerifyCredentials",
-        type: 1
+        target: "ConfirmCredentialPreview",
+        type: 1,
       }) + unicodeChar;
 
     client.on("error", function (error: any) {
@@ -165,8 +143,8 @@ export async function GET() {
         console.error("Failed to parse JSON:", error);
       }
 
-      if (jsonObject.target === "ShowQRCode") {
-        const uri = jsonObject.arguments?.[0]?.uri;
+      if (jsonObject.target === "ShowInvitation") {
+        const uri = jsonObject.arguments?.[0]?.invitationUrl;
         openIDLink = uri;
         resolve(openIDLink);
         client.close();

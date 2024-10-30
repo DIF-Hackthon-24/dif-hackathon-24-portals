@@ -106,7 +106,7 @@ export default function ProductPage() {
       <main className="mx-auto mt-8 max-w-2xl px-4 pb-16 sm:px-6 sm:pb-24 lg:max-w-7xl lg:px-8">
         <div className="lg:grid lg:auto-rows-min lg:grid-cols-12 lg:gap-x-8">
           <div className="lg:col-span-5 lg:col-start-8">
-            <h1 className="text-3xl font-bold">{product.title}</h1>
+            <h1 className="text-3xl font-bold text-gray-900">{product.title}</h1>
             <div className="flex justify-between">
               <h2 className="text-xl font-medium text-gray-900">
                 {product.name}

@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+    basePath: '/portals'
+};
 
 export default nextConfig;

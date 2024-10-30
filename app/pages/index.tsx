@@ -12,7 +12,7 @@ export default function Login() {
   const [isMounted, setIsMounted] = useState(false); // To track if component is mounted
 
   const modalTitle = "Passwordless Login";
-  const modalDescription = "Ready to scan?";
+  const modalDescription = "If you don't have a Login Credential, click on the button below to get one for a single-scan login experience"; // TODO: re-wording
 
   const pollingUrl = "https://verifier.portal.walt.id/openid4vc/session/";
   const router = useRouter();
@@ -180,7 +180,7 @@ export default function Login() {
         isOpen={modalIsOpen}
         onClose={closeModal}
         title={modalTitle}
-        buttonActionTitle="Acquire Login Credential"
+        buttonActionTitle="Get a Login Credential"
         buttonAction={fetchIssuanceQRCode}
         footer="I'll use my password to login instead"
         secondaryButton="Use my Login Credential"

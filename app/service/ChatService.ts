@@ -3,7 +3,7 @@ import axios from "axios";
 
 const PROTOCOL = PROTOCOL_DEFINITION.protocol;
 
-const DWN_CLIENT_API = "http://188.245.52.145:80";
+const DWN_CLIENT_API = "http://188.245.52.145:80/dwn";
 
 export const readThreads = async (keyInfo: any, target: any) => {
   console.log(DWN_CLIENT_API + "/records/query");

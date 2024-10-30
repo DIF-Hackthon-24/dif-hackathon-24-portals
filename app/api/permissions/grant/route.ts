@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
   console.log(searchParams);
   const protocol = searchParams.get("protocol");
   const action = searchParams.get("action");
-  const url = `http://188.245.52.145:80/permissions/grant?protocol=${protocol}&action=${action}`;
+  const url = `http://188.245.52.145:80/dwn/permissions/grant?protocol=${protocol}&action=${action}`;
 
   // const myHeaders = new Headers();
   // myHeaders.append("accept", "*/*");

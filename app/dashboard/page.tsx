@@ -27,7 +27,7 @@ export default function Dashboard() {
   const target = "did:key:z6Mkkq7UNpMq9cdYoC5bqG2C4reWkPTgwDzKqBy1Y8utc4gW";
 
   const threadId =
-    "bafyreigpj6drhqhtgltzcsrldnuti35sophnxvq2jlul5wzs2eb7djkho4";
+    "bafyreih6qbrf6mj2vumndhwgrfu6rqyhrp4ns6z7o4drwcg6uoexuly7h4";
 
   const hotelKeyInfo = {
     keyId:
@@ -97,8 +97,8 @@ export default function Dashboard() {
       const author = extractAuthor(threadsList[0].authorization);
       console.log("author", author);
       setRecipient(author);
-
-      const threadTitle = threadsList[0].encodedData.Title;
+      console.log(threadsList);
+      const threadTitle = threadsList[0].encodedData.title;
       console.log("thread title: ", threadTitle);
       setThreadTitle(threadTitle);
     };
@@ -119,7 +119,7 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-col p-8 h-screen">
-      <div className="text-2xl font-bold mb-6">Guest Dashboard - Alex</div>
+      <div className="text-2xl font-bold mb-6">Guest Dashboard - John</div>
       <div className="flex flex-row flex-grow gap-10 max-h-[95%]">
         <div className="bg-gray-200 p-4 flex-grow flex flex-col justify-end rounded-xl max-h-[95%]">
           <ChatHeaderComponent threadTitle={threadTitle} target={target} />

@@ -11,6 +11,12 @@ export default function ChatComponent(props: ChatComponentProps) {
   console.log("messages", props.messages);
   console.log("keyinfo", props.keyInfo);
 
+  const didsToNames: { [key: string]: string } = {
+    "did:key:z6Mkkq7UNpMq9cdYoC5bqG2C4reWkPTgwDzKqBy1Y8utc4gW": "John",
+    "did:key:z6MkeXmNA9HutZcYei7YsU5jimrMcb7EU43BWTXqLXw59VRq":
+      "Starlight Hotels"
+  };
+
   // let chatSource: any[] = [];
   // props.messages.forEach((msg: any) => {
   //   let formattedMsg: MessageType;
@@ -51,7 +57,7 @@ export default function ChatComponent(props: ChatComponentProps) {
                       ? "left"
                       : "right",
                   type: "text",
-                  title: message.author,
+                  title: didsToNames[message.author],
                   text: (
                     <div className="grid flex-col justify-items-start">
                       <div>{message.encodedData.title}</div>
@@ -67,7 +73,7 @@ export default function ChatComponent(props: ChatComponentProps) {
                       ? "left"
                       : "right",
                   type: "text",
-                  title: message.author,
+                  title: didsToNames[message.author],
                   text: message.encodedData.title
                 }
           )}

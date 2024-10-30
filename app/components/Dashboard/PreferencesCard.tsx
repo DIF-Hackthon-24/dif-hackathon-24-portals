@@ -61,7 +61,7 @@ export default function PreferencesCard(props: PreferencesCardProps) {
   return (
     <div className="px-4 sm:px-0">
       <h3 className="text-base font-semibold leading-7 text-gray-900">
-        Alex's Preferences
+        John's Preferences
       </h3>
       <div className="mt-3 sm:mt-4">
         <div className="hidden sm:block">

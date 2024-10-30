@@ -66,6 +66,10 @@ export default function ConfirmationPage() {
                 {product.price}
               </p>
             </div>
+            <div className="italic mt-4 flex flex-row items-center">
+              <img className="h-[25pt] mr-3" src="https://icons.veryicon.com/png/o/miscellaneous/face-monochrome-icon/calendar-249.png" />
+              19/11/2024 - 24/11/2024
+            </div>
           </div>
 
           {/* Image gallery */}

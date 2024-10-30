@@ -51,10 +51,10 @@ export async function GET() {
       "Sec-Fetch-User": "?1",
       Priority: "u=0, i",
       Pragma: "no-cache",
-      "Cache-Control": "no-cache",
+      "Cache-Control": "no-cache"
     },
     method: "GET",
-    mode: "cors",
+    mode: "cors"
   });
 
   const headerLoaction = data.url;
@@ -78,11 +78,11 @@ export async function GET() {
         "Sec-Fetch-Site": "same-origin",
         Priority: "u=4",
         Pragma: "no-cache",
-        "Cache-Control": "no-cache",
+        "Cache-Control": "no-cache"
       },
       referrer: headerLoaction,
       method: "POST",
-      mode: "cors",
+      mode: "cors"
     }
   );
 
@@ -101,7 +101,7 @@ export async function GET() {
           // "user-agent":
           //   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:131.0) Gecko/20100101 Firefox/131.0",
           host: "locprod.ccg.condatis.com",
-          origin: "https://locprod.ccg.condatis.com",
+          origin: "https://locprod.ccg.condatis.com"
           // prgama: "no-cache",
           // accept: "*/*",
           // "accept-language": "en-GB,en;q=0.5",
@@ -110,7 +110,7 @@ export async function GET() {
           // connection: "keep-alive, Upgrade",
           // "cache-control":"no-cache",
           // upgrade: "websocket"
-        },
+        }
       }
     );
 
@@ -130,12 +130,12 @@ export async function GET() {
           {
             client_id: "755a002b-17dd-49e7-94e3-8a25dfb498be",
             credential_names: ["StarlightHotelsBooking"],
-            data_identifier: dataIdentifier,
-          },
+            data_identifier: dataIdentifier
+          }
         ],
         invocationId: "0",
         target: "VerifyCredentials",
-        type: 1,
+        type: 1
       }) + unicodeChar;
 
     client.on("error", function (error: any) {
@@ -166,7 +166,6 @@ export async function GET() {
       }
 
       if (jsonObject.target === "ShowQRCode") {
-
         const uri = jsonObject.arguments?.[0]?.uri;
         openIDLink = uri;
         resolve(openIDLink);

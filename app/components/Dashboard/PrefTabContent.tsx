@@ -13,10 +13,37 @@ export default function PrefTabContent(props: PrefTabContentProps) {
   const pollEndpoint = useCallback(async () => {
     console.log("protocol", props.protocol);
     try {
+      const myHeaders = new Headers();
+      myHeaders.append("accept", "*/*");
+      myHeaders.append("Content-Type", "application/json");
+
+      // keyInfo hardcoded right now, representing hotel website's keyInfo to sign permission grant GET
+      // target is the user's DWN, using hardcoded for now too
+
+      const stringifiedKey = JSON.stringify({
+        keyId:
+          "did:key:z6MkeXmNA9HutZcYei7YsU5jimrMcb7EU43BWTXqLXw59VRq#z6MkeXmNA9HutZcYei7YsU5jimrMcb7EU43BWTXqLXw59VRq",
+        privateJwk: {
+          crv: "Ed25519",
+          d: "64EBJEwSPeYkEZLSgVFWAOBGftgO-JSdgfRZn470DXs",
+          kty: "OKP",
+          x: "ASd5wVTGxYk6NWiWtSZIypBkT11mv8r8jpkdTDkyOdA",
+          kid: "U1e64aXaBM_1T7KkyzLejCbSLaYGE6Lpy0Rxyc3iuNA",
+          alg: "EdDSA"
+        }
+      });
+
+      myHeaders.append("X-KeyInfo", stringifiedKey);
+      myHeaders.append(
+        "X-Target",
+        "did:key:z6Mkkq7UNpMq9cdYoC5bqG2C4reWkPTgwDzKqBy1Y8utc4gW"
+      );
+
       const response = await fetch(
         `/api/permissions/grant?protocol=https://dif-hackathon-2024/schemas/${props.protocol}&action=read`,
         {
-          method: "GET"
+          method: "GET",
+          headers: myHeaders
         }
       );
       const data = await response.json();
@@ -63,6 +90,18 @@ export default function PrefTabContent(props: PrefTabContentProps) {
         protocol: protocol,
         protocolPaths: protocolPaths,
         permissionGrantId: grantId,
+        keyInfo: {
+          keyId:
+            "did:key:z6MkeXmNA9HutZcYei7YsU5jimrMcb7EU43BWTXqLXw59VRq#z6MkeXmNA9HutZcYei7YsU5jimrMcb7EU43BWTXqLXw59VRq",
+          privateJwk: {
+            crv: "Ed25519",
+            d: "64EBJEwSPeYkEZLSgVFWAOBGftgO-JSdgfRZn470DXs",
+            kty: "OKP",
+            x: "ASd5wVTGxYk6NWiWtSZIypBkT11mv8r8jpkdTDkyOdA",
+            kid: "U1e64aXaBM_1T7KkyzLejCbSLaYGE6Lpy0Rxyc3iuNA",
+            alg: "EdDSA"
+          }
+        },
         target: "did:key:z6Mkkq7UNpMq9cdYoC5bqG2C4reWkPTgwDzKqBy1Y8utc4gW"
       });
 

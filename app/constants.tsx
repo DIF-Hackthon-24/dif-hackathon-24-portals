@@ -12,6 +12,14 @@ export const serviceProviderKeyInfo = {
   }
 };
 
+export const travelerProfileAttributes = [
+  { query: "roomType", display: "Room Type" },
+  { query: "smoking", display: "Smoking" },
+  { query: "wheelchairAccessible", display: "Wheelchair Accessible" },
+  { query: "breakfastIncluded", display: "Breakfast Included" },
+  { query: "spaTreatments", display: "Spa Treatments" }
+];
+
 export const hotelSearchPreferencesTabAttributes = [
   { query: "roomType", display: "Room Type" },
   { query: "smoking", display: "Smoking" },

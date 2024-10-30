@@ -3,7 +3,7 @@ import { NextRequest } from "next/server";
 export async function POST(request: NextRequest) {
   const reqBody = await request.json();
   console.log(reqBody);
-  const url = `http://localhost:3001/records/read`;
+  const url = `http://188.245.52.145:80/records/read`;
 
   const myHeaders = new Headers();
   myHeaders.append("accept", "*/*");

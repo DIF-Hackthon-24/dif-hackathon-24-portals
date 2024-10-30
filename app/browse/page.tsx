@@ -258,6 +258,7 @@ export default function Browse() {
       body: body
     });
     const data = await response.json();
+    console.log("QR code", data);
     setQrCodeUrl(data.qrCode);
     setModalIsOpen(true);
     setPolling(true);

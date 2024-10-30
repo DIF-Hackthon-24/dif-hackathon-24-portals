@@ -3,7 +3,7 @@ import axios from "axios";
 
 const PROTOCOL = PROTOCOL_DEFINITION.protocol;
 
-const DWN_CLIENT_API = "http://localhost:3001";
+const DWN_CLIENT_API = "http://188.245.52.145:80";
 
 export const readThreads = async (keyInfo: any, target: any) => {
   console.log(DWN_CLIENT_API + "/records/query");
@@ -119,6 +119,60 @@ export const sendCheckInMessage = async (
 
   const toSend =
     '{"title":"It\'s time to check-in! Click the button below to begin the check-in process.","action":"Start check-in"}';
+
+  let response = await axios.post(DWN_CLIENT_API + "/records/create", {
+    protocol: PROTOCOL,
+    protocolPath: "thread/message",
+    dataFormat: "application/json",
+    data: toSend,
+    recipient: recipient,
+    parentContextId: threadId,
+    keyInfo: keyInfo,
+    target: target
+  });
+
+  console.log(response.data);
+
+  return await response.data;
+};
+
+export const sendVerifyBookingMessage = async (
+  threadId: any,
+  keyInfo: any,
+  target: any,
+  recipient: any,
+  initialOffer: String
+) => {
+  console.log("in sendVerifyBookingMessage");
+
+  const toSend = `{"title":"Let\'s verify your booking. Please click the button below to present your booking credential.","action":"Share booking","initialOffer":"${initialOffer}"}`;
+
+  let response = await axios.post(DWN_CLIENT_API + "/records/create", {
+    protocol: PROTOCOL,
+    protocolPath: "thread/message",
+    dataFormat: "application/json",
+    data: toSend,
+    recipient: recipient,
+    parentContextId: threadId,
+    keyInfo: keyInfo,
+    target: target
+  });
+
+  console.log(response.data);
+
+  return await response.data;
+};
+
+export const sendRoomKeyMessage = async (
+  threadId: any,
+  keyInfo: any,
+  target: any,
+  recipient: any,
+  initialOffer: String
+) => {
+  console.log("in sendRoomKeyMessage");
+
+  const toSend = `{"title":"Thanks for sharing your booking details. Press below to finish the check-in process.","action":"Save room key","initialOffer":"${initialOffer}"}`;
 
   let response = await axios.post(DWN_CLIENT_API + "/records/create", {
     protocol: PROTOCOL,

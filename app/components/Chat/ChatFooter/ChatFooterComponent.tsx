@@ -1,7 +1,12 @@
+"use client";
+
 import { Input } from "react-chat-elements";
 import { useRef, useState } from "react";
 // import { sendMessage } from "@/service/MockChatService";
-import { sendMessage } from "../../../service/ChatService";
+import {
+  sendMessage,
+  sendVerifyBookingMessage
+} from "../../../service/ChatService";
 import { Button } from "react-chat-elements";
 import "react-chat-elements/dist/main.css";
 import {
@@ -15,6 +20,7 @@ type ChatFooterComponentProps = {
   recipient: any;
   sender: any;
   setRefetch: any;
+  setSendKeyMessage: any;
 };
 
 export default function ChatFooterComponent(props: ChatFooterComponentProps) {
@@ -23,6 +29,8 @@ export default function ChatFooterComponent(props: ChatFooterComponentProps) {
   const [sendingCheckIn, setSendingCheckIn] = useState<boolean>(false);
   const [sending, setSending] = useState<boolean>(false);
   const [sendingPrefs, setSendingPrefs] = useState<boolean>(false);
+  const [sendingVerifyBooking, setSendingVerifyBooking] =
+    useState<boolean>(false);
   console.log("recipient", props.recipient);
   console.log("target", props.target);
 
@@ -72,6 +80,32 @@ export default function ChatFooterComponent(props: ChatFooterComponentProps) {
     setSendingPrefs(false);
   };
 
+  const startVerifyBooking = async () => {
+    console.log("Starting verify booking flow");
+    setSendingVerifyBooking(true);
+    console.log("Fetching the URL");
+    try {
+      const response = await fetch("/api/bookingIssuance", {
+        method: "GET"
+      });
+      const data = await response.json();
+      console.log("Fetched URL data from inside verifyBooking", data);
+
+      await sendVerifyBookingMessage(
+        props.threadId,
+        props.sender,
+        props.target,
+        props.recipient,
+        data.link
+      );
+      props.setRefetch();
+      setSendingVerifyBooking(false);
+      props.setSendKeyMessage(true);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <div>
       <div className="flex flex-col gap-4">
@@ -84,6 +118,12 @@ export default function ChatFooterComponent(props: ChatFooterComponentProps) {
             onClick={startCheckIn}
           >
             {sendingCheckIn ? "Sending..." : "Start check-in process"}
+          </button>
+          <button
+            className="rounded-md bg-cyan-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-cyan-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
+            onClick={startVerifyBooking}
+          >
+            {sendingVerifyBooking ? "Sending..." : "Verify booking"}
           </button>
           <button
             className="rounded-md bg-cyan-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-cyan-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"

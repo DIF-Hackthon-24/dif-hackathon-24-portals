@@ -8,7 +8,7 @@ export async function POST() {
 
   const urlRedirect =
     "https://locprod.ccg.condatis.com/v2/oidc/authorize?client_id=755a002b-17dd-49e7-94e3-8a25dfb498be&redirect_uri=" +
-    "http://localhost:3000/browse" +
+    "http://localhost:3000/browse/confirmation" +
     "&scope=openid+issue." +
     credentialType +
     "&id_token_hint=" +

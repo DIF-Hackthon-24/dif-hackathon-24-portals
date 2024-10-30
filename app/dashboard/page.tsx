@@ -139,9 +139,9 @@ export default function Dashboard() {
             setSendKeyMessage={setSendKeyMessage}
           />
         </div>
-        {/* <div className="flex-[1_1_10%]">
+        <div className="flex-[1_1_10%]">
           <PreferencesCard />
-        </div> */}
+        </div>
       </div>
     </div>
   );

@@ -3,59 +3,60 @@ import PrefTabContent from "./PrefTabContent";
 import {
   hotelSearchPreferencesTabAttributes,
   hotelStayPreferencesTabAttributes,
-  diningPreferencesTabAttributes
+  diningPreferencesTabAttributes,
+  travelerProfileAttributes
 } from "@/app/constants";
 
 type PreferencesCardProps = {};
 
 export default function PreferencesCard(props: PreferencesCardProps) {
-  const tabs = [
-    { name: "Hotel Search" },
-    { name: "Hotel Stay" },
-    { name: "Dining Experience" }
-  ];
+  // const tabs = [
+  //   { name: "Hotel Search" },
+  //   { name: "Hotel Stay" },
+  //   { name: "Dining Experience" }
+  // ];
 
-  const [currentTab, setCurrentTab] = useState<string>(tabs[0].name);
+  // const [currentTab, setCurrentTab] = useState<string>(tabs[0].name);
 
-  function classNames(...classes) {
-    return classes.filter(Boolean).join(" ");
-  }
+  // function classNames(...classes) {
+  //   return classes.filter(Boolean).join(" ");
+  // }
 
-  const handleTabClick = (tabName: string) => {
-    console.log("Setting current tab to ", tabName);
-    setCurrentTab(tabName);
-  };
+  // const handleTabClick = (tabName: string) => {
+  //   console.log("Setting current tab to ", tabName);
+  //   setCurrentTab(tabName);
+  // };
 
-  const renderTabContent = () => {
-    switch (currentTab) {
-      case "Hotel Search":
-        return (
-          <PrefTabContent
-            key="hotelSearch"
-            protocol="hotelSearchPreferences"
-            attributes={hotelSearchPreferencesTabAttributes}
-          />
-        );
-      case "Hotel Stay":
-        return (
-          <PrefTabContent
-            key="hotelStay"
-            protocol="hotelStayPreferences"
-            attributes={hotelStayPreferencesTabAttributes}
-          />
-        );
-      case "Dining Experience":
-        return (
-          <PrefTabContent
-            key="dining"
-            protocol="diningPreferences"
-            attributes={diningPreferencesTabAttributes}
-          />
-        );
-      default:
-        return null;
-    }
-  };
+  // const renderTabContent = () => {
+  //   switch (currentTab) {
+  //     case "Hotel Search":
+  //       return (
+  //         <PrefTabContent
+  //           key="hotelSearch"
+  //           protocol="hotelSearchPreferences"
+  //           attributes={hotelSearchPreferencesTabAttributes}
+  //         />
+  //       );
+  //     case "Hotel Stay":
+  //       return (
+  //         <PrefTabContent
+  //           key="hotelStay"
+  //           protocol="hotelStayPreferences"
+  //           attributes={hotelStayPreferencesTabAttributes}
+  //         />
+  //       );
+  //     case "Dining Experience":
+  //       return (
+  //         <PrefTabContent
+  //           key="dining"
+  //           protocol="diningPreferences"
+  //           attributes={diningPreferencesTabAttributes}
+  //         />
+  //       );
+  //     default:
+  //       return null;
+  //   }
+  // };
 
   return (
     <div className="px-4 sm:px-0">
@@ -64,7 +65,7 @@ export default function PreferencesCard(props: PreferencesCardProps) {
       </h3>
       <div className="mt-3 sm:mt-4">
         <div className="hidden sm:block">
-          <nav className="-mb-px flex space-x-8">
+          {/* <nav className="-mb-px flex space-x-8">
             {tabs.map((tab) => (
               <a
                 key={tab.name}
@@ -79,10 +80,15 @@ export default function PreferencesCard(props: PreferencesCardProps) {
                 {tab.name}
               </a>
             ))}
-          </nav>
+          </nav> */}
+          <PrefTabContent
+            key="hotelSearch"
+            protocol="travelerProfile"
+            attributes={travelerProfileAttributes}
+          />
         </div>
       </div>
-      {renderTabContent()}
+      {/* {renderTabContent()} */}
     </div>
   );
 }

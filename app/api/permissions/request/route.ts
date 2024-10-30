@@ -4,7 +4,7 @@ import QRCode from "qrcode";
 export async function POST(request: NextRequest) {
   const reqBody = await request.json();
   console.log(reqBody);
-  const url = `http://188.245.52.145:80/permissions/request`;
+  const url = `http://188.245.52.145:80/dwn/permissions/request`;
 
   const myHeaders = new Headers();
   myHeaders.append("accept", "*/*");

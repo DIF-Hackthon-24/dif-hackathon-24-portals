@@ -49,15 +49,15 @@ export default function ConfirmationPage() {
           src="https://cdn.pixabay.com/photo/2012/04/11/10/39/tick-27406_640.png"
           style={{ height: "3rem", margin: "auto", marginBottom: "1rem" }}
         />
-        <h1 className="text-5xl font-bold text-center">All booked! </h1>
-        <h2 className="text-3xl font-serif text-center mb-16 mt-10">
+        <h1 className="text-5xl font-bold text-center text-gray-900">All booked! </h1>
+        <h2 className="text-3xl font-serif text-center mb-16 mt-10  text-gray-900">
           We can't wait to see you soon, please check your wallet for the
           booking details
         </h2>
 
         <div className="lg:grid lg:auto-rows-min lg:grid-cols-12 lg:gap-x-8">
           <div className="lg:col-span-5 lg:col-start-8">
-            <h1 className="text-3xl font-bold">{product.title}</h1>
+            <h1 className="text-3xl font-bold text-gray-900">{product.title}</h1>
             <div className="flex justify-between">
               <h2 className="text-xl font-medium text-gray-900">
                 {product.name}
@@ -66,7 +66,7 @@ export default function ConfirmationPage() {
                 {product.price}
               </p>
             </div>
-            <div className="italic mt-4 flex flex-row items-center">
+            <div className="italic mt-4 flex flex-row items-center text-gray-900">
               <img className="h-[25pt] mr-3" src="https://icons.veryicon.com/png/o/miscellaneous/face-monochrome-icon/calendar-249.png" />
               19/11/2024 - 24/11/2024
             </div>

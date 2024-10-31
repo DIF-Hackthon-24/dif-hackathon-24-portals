@@ -344,7 +344,6 @@ export default function Browse() {
                 <h1
                   className="text-4xl tracking-tight text-gray-900"
                   style={{
-                    zIndex: 99,
                     position: "relative",
                     width: "max-content",
                     backgroundColor: "color(srgb 0.9999 0.9689 0.93)",
